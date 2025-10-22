@@ -1,0 +1,36 @@
+<!-- simple top nav shared by all pages -->
+<style>
+  .topnav {
+    display:flex; gap:12px; align-items:center; padding:10px 14px;
+    position:sticky; top:0; z-index:100; border-bottom:1px solid #334155;
+    background: var(--card, #111827); color: var(--text, #e2e8f0);
+  }
+  .topnav a {
+    text-decoration:none; padding:8px 10px; border-radius:10px;
+    color: inherit; border:1px solid #334155;
+  }
+  .topnav a.active { background:#1f2937; }
+  .topnav .spacer { flex:1; }
+</style>
+<nav class="topnav">
+  <strong>Dashboards</strong>
+  <a href="/"            id="lnk-sales-v1">Sales V1</a>
+  <a href="/v2"          id="lnk-sales-v2">Sales V2</a>
+  <a href="/project"     id="lnk-proj-v1">Project V1</a>
+  <a href="/project/v2"  id="lnk-proj-v2">Project V2</a>
+  <div class="spacer"></div>
+</nav>
+<script>
+  // highlight current link
+  (function(){
+    const p = location.pathname;
+    const map = {
+      "/": "lnk-sales-v1",
+      "/v2": "lnk-sales-v2",
+      "/project": "lnk-proj-v1",
+      "/project/v2": "lnk-proj-v2",
+    };
+    const id = map[p];
+    if(id){ const el = document.getElementById(id); if(el) el.classList.add("active"); }
+  })();
+</script>

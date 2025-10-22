@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Design Policy Dashboard – V2 (CEO Edition)</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e2e8f0; --muted:#94a3b8; --accent:#60a5fa; }
+    [data-theme="light"]{ --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#475569; --accent:#2563eb; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system; background:var(--bg); color:var(--text); }
+    .wrap { padding:16px; display:grid; gap:16px; }
+    .bar { display:flex; gap:12px; flex-wrap:wrap; align-items:end; }
+    .card { background:var(--card); border-radius:18px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .title { margin:0 0 10px; color:var(--accent); font-weight:800; letter-spacing:.2px; }
+    .row { display:grid; gap:16px; }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .grid-1 { grid-template-columns: 1fr; }
+    .charts{ min-height:260px; }
+    .kpis { display:grid; gap:16px; grid-template-columns: repeat(5,minmax(0,1fr)); }
+    .kpi  { background:linear-gradient(180deg,#0b1222,#111827); border-radius:16px; padding:14px; }
+    [data-theme="light"] .kpi { background:linear-gradient(180deg,#eff6ff,#ffffff); }
+    .kpi h4{ margin:0; font-size:13px; color:var(--muted); font-weight:600; }
+    .kpi p { margin:6px 0 0; font-size:22px; font-weight:800; }
+    .ctrl { display:flex; flex-direction:column; gap:6px; }
+    .ctrl label{ font-size:12px; color:var(--muted); }
+    .ctrl input, .ctrl select, .ctrl button {
+      background:transparent; color:var(--text); border:1px solid #334155; border-radius:10px; padding:8px 10px;
+    }
+    .btn { cursor:pointer; }
+    .right { margin-left:auto; display:flex; gap:8px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th, td { padding:8px 10px; border-bottom:1px solid #334155; }
+    th { text-align:left; color:var(--muted); font-weight:600; }
+    @media (max-width:1200px){
+      .grid-3 { grid-template-columns:1fr; }
+      .grid-2 { grid-template-columns:1fr; }
+      .kpis   { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  {% include "_nav.html" %}
+  <div class="wrap">
+    <div class="card">
+      <div class="bar">
+        <h1 class="title">CEO Dashboard – Version 2</h1>
+        <div class="right">
+          <button id="toggleTheme" class="btn">Toggle Theme</button>
+          <button id="refreshBtn" class="btn">Refresh Data</button>
+          <button id="exportBtn" class="btn">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="bar" style="margin-top:8px">
+        <div class="ctrl">
+          <label>From</label><input type="date" id="fromDate">
+        </div>
+        <div class="ctrl">
+          <label>To</label><input type="date" id="toDate">
+        </div>
+        <div class="ctrl">
+          <label>Partner</label><select id="partnerSel"><option value="">All</option></select>
+        </div>
+        <div class="ctrl">
+          <label>Location</label><select id="locationSel"><option value="">All</option></select>
+        </div>
+        <div class="ctrl">
+          <label>META Status</label>
+          <select id="statusSel">
+            <option value="">All</option>
+            <option>Won</option><option>Lost</option><option>In Progress</option>
+          </select>
+        </div>
+        <div class="right">
+          <button id="applyBtn" class="btn">Apply Filters</button>
+          <a href="/" class="btn" style="text-decoration:none">Go to V1</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi"><h4>Total Project Value</h4><p id="k1">—</p></div>
+        <div class="kpi"><h4>Total Design Policy Amount</h4><p id="k2">—</p></div>
+        <div class="kpi"><h4>Win Rate</h4><p id="k3">—</p></div>
+        <div class="kpi"><h4>Avg Cycle (days)</h4><p id="k4">—</p></div>
+        <div class="kpi"><h4>Upcoming Presentations (14d)</h4><p id="k5">—</p></div>
+      </div>
+    </div>
+
+    <div class="row grid-3">
+      <div class="card"><h3 class="title">Win Rate</h3><div id="gauge" class="charts"></div></div>
+      <div class="card"><h3 class="title">Monthly Value by META Status</h3><div id="stacked" class="charts"></div></div>
+      <div class="card"><h3 class="title">Cycle Time Buckets</h3><div id="cycle" class="charts"></div></div>
+    </div>
+
+    <div class="row grid-2">
+      <div class="card"><h3 class="title">Funnel – Policy → Presentation → Contract</h3><div id="funnel" class="charts" style="height:340px"></div></div>
+      <div class="card"><h3 class="title">Top Partners by Value</h3><div id="partners" class="charts" style="height:340px"></div></div>
+    </div>
+
+    <div class="row grid-1">
+      <div class="card"><h3 class="title">Project Value by Location (Treemap)</h3><div id="tree" class="charts" style="height:400px"></div></div>
+      <div class="card"><h3 class="title">Issuance Activity (Calendar Heatmap)</h3><div id="cal" class="charts" style="height:280px"></div></div>
+    </div>
+
+    <div class="card">
+      <h3 class="title">Top Deals</h3>
+      <div id="tableWrap"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
+  <script src="/static/app_v2.js"></script>
+</body>
+</html>

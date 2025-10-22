@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Project Dashboard – V1</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e2e8f0; --muted:#94a3b8; --accent:#60a5fa; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system; background:var(--bg); color:var(--text); }
+    .wrap { padding:16px; display:grid; gap:16px; }
+    .card { background:var(--card); border-radius:18px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .title { margin:0 0 10px; color:var(--accent); font-weight:800; letter-spacing:.2px; }
+    .kpis { display:grid; gap:16px; grid-template-columns: repeat(6, minmax(0,1fr)); }
+    .kpi  { background:linear-gradient(180deg,#0b1222,#111827); border-radius:16px; padding:14px; }
+    .kpi h4{ margin:0; font-size:13px; color:var(--muted); font-weight:600; }
+    .kpi p { margin:6px 0 0; font-size:22px; font-weight:800; }
+    .row { display:grid; gap:16px; }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .charts{ min-height:260px; }
+    @media (max-width:1200px){ .kpis{grid-template-columns:1fr 1fr}; .grid-3,.grid-2{grid-template-columns:1fr;} }
+  </style>
+  
+</head>
+<body>
+  {% include "_nav.html" %}
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">Project Dashboard – Version 1</h1>
+      <div class="kpis">
+        <div class="kpi"><h4>Portfolio Value</h4><p id="k1">—</p></div>
+        <div class="kpi"><h4>Projects In Progress</h4><p id="k2">—</p></div>
+        <div class="kpi"><h4>On-Time Rate</h4><p id="k3">—</p></div>
+        <div class="kpi"><h4>Avg Progress</h4><p id="k4">—</p></div>
+        <div class="kpi"><h4>Avg CPI / SPI</h4><p id="k5">—</p></div>
+        <div class="kpi"><h4>Outstanding AR</h4><p id="k6">—</p></div>
+      </div>
+    </div>
+
+    <div class="row grid-3">
+      <div class="card"><h3 class="title">On-Time Delivery</h3><div id="gauge" class="charts"></div></div>
+      <div class="card"><h3 class="title">Portfolio by Status</h3><div id="status" class="charts"></div></div>
+      <div class="card"><h3 class="title">Health Breakdown</h3><div id="health" class="charts"></div></div>
+    </div>
+
+    <div class="row grid-2">
+      <div class="card"><h3 class="title">Value by Location</h3><div id="loc" class="charts"></div></div>
+      <div class="card"><h3 class="title">Top Clients</h3><div id="clients" class="charts"></div></div>
+    </div>
+
+    <div class="row grid-2">
+      <div class="card"><h3 class="title">Schedule Variance Buckets (days)</h3><div id="var" class="charts"></div></div>
+      <div class="card"><h3 class="title">Monthly Starts (Count)</h3><div id="starts" class="charts"></div></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
+  <script src="/static/app_project_v1.js"></script>
+</body>
+</html>

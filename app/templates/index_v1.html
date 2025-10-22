@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>CEO Dashboard – Version 1</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+  <style>
+    :root {
+      --bg: #0f172a; --card:#111827; --text:#e2e8f0; --muted:#94a3b8; --accent:#60a5fa;
+    }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system; background:var(--bg); color:var(--text); }
+    .wrap { padding: 16px; display:grid; gap:16px; }
+    .grid-3 { display:grid; gap:16px; grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .grid-2 { display:grid; gap:16px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .grid-1 { display:grid; gap:16px; grid-template-columns: 1fr; }
+    .card { background:var(--card); border-radius: 18px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .title { margin: 8px 0 16px; color: var(--accent); font-weight: 700; letter-spacing:.2px; }
+    .charts { min-height: 260px; }
+    .kpis { display:grid; gap:16px; grid-template-columns: repeat(5,minmax(0,1fr)); }
+    .kpi { background:linear-gradient(180deg,#0b1222,#111827); border-radius:16px; padding:14px; }
+    .kpi h4 { margin:0; font-size:13px; color: var(--muted); font-weight:600; }
+    .kpi p { margin:6px 0 0; font-size:22px; font-weight:800; }
+    @media (max-width:1200px){
+      .grid-3{ grid-template-columns:1fr; }
+      .grid-2{ grid-template-columns:1fr; }
+      .kpis{ grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  {% include "_nav.html" %}
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">CEO Dashboard: Design Agreement Status</h1>
+      <div class="kpis" id="kpi-row">
+        <div class="kpi"><h4>Total Project Value</h4><p id="kpi-total-value">—</p></div>
+        <div class="kpi"><h4>Total Design Policy Amount</h4><p id="kpi-total-policy">—</p></div>
+        <div class="kpi"><h4>Win Rate</h4><p id="kpi-win">—</p></div>
+        <div class="kpi"><h4>Avg Cycle (days)</h4><p id="kpi-cycle">—</p></div>
+        <div class="kpi"><h4>Upcoming Presentations (14d)</h4><p id="kpi-upcoming">—</p></div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card"><h3 class="title">Win Rate</h3><div id="gauge_win" class="charts"></div></div>
+      <div class="card"><h3 class="title">Monthly Project Value</h3><div id="bar_monthly" class="charts"></div></div>
+      <div class="card"><h3 class="title">Cycle Time Buckets</h3><div id="bar_cycle" class="charts"></div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card"><h3 class="title">Project Value by Contract Status</h3><div id="pie_status" class="charts" style="height:340px"></div></div>
+      <div class="card"><h3 class="title">Top Partners by Project Value</h3><div id="bar_partner" class="charts" style="height:340px"></div></div>
+    </div>
+
+    <div class="grid-1">
+      <div class="card"><h3 class="title">Project Value by Location (Treemap)</h3><div id="tree_location" class="charts" style="height:420px"></div></div>
+      <div class="card"><h3 class="title">Issuance Activity (Calendar Heatmap)</h3><div id="cal_issuance" class="charts" style="height:300px"></div></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
+  <script src="/static/app_v1.js"></script>
+
+</body>
+</html>

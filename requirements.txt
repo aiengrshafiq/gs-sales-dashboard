@@ -1,0 +1,11 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pandas==2.2.2
+jinja2==3.1.4
+python-dotenv==1.0.1
+gspread==5.12.4            # <-- downgraded to a <6 version
+gspread-pandas==3.3.0
+google-auth==2.35.0
+oauth2client==4.1.3
+openpyxl==3.1.5
+orjson
