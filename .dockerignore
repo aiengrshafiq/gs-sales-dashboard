@@ -8,3 +8,17 @@ venv/
 *.log
 .env
 credentials.json
+
+# Python
+venv/
+*.pyc
+__pycache__/
+
+# Secrets
+.env
+credentials.json
+
+# IDE / OS
+.vscode/
+.git/
+.gitignore
