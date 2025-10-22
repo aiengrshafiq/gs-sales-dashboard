@@ -43,4 +43,4 @@ ENV CACHE_SECONDS=600
 # --- THIS IS THE MISSING LINE ---
 # This command tells Gunicorn to run the 'server' object
 # from your 'dashboard.py' file.
-CMD ["gunicorn", "dashboard:server", "-b", "0.0.0.0:8000", "-w", "2", "--timeout", "120"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "app.main:app", "-b", "0.0.0.0:8000", "-w", "2", "--timeout", "120"]
