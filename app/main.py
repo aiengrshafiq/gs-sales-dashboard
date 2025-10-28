@@ -47,7 +47,24 @@ def warm():
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    
+    # return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(
+        "coming_soon.html",
+        {
+            "request": request,
+            "page_title": "Metaforge — Coming Soon",
+            "brand_name": "Metaforge",
+            "headline": "Something powerful is almost here",
+            "subheadline": "We’re polishing the experience. Drop your email to get first access.",
+            # Use an ISO date string (UTC recommended) for the countdown:
+            "target_date": "2025-12-31T23:59:59Z",
+            "contact_email": "hello@metaforge.global",
+            "year": datetime.utcnow().year,
+            # To hide the form, set show_form to False
+            "show_form": True,
+        },
+    )
 
 @app.get("/v2", response_class=HTMLResponse)
 def v2(request: Request):

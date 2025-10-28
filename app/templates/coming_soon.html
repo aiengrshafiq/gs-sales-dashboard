@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ page_title or "Coming Soon" }}</title>
+  <meta name="description" content="{{ meta_description or 'We’re launching something exciting very soon.' }}" />
+  <style>
+    :root {
+      --bg1:#0f172a; --bg2:#1e293b; --card:rgba(255,255,255,.06);
+      --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; --ring:rgba(56,189,248,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 20% -10%, #0ea5e9 0%, transparent 50%),
+                  radial-gradient(1400px 800px at 110% 120%, #22d3ee 0%, transparent 50%),
+                  linear-gradient(160deg,var(--bg1),var(--bg2));
+      display:grid; place-items:center; padding:24px;
+    }
+    .wrap{max-width:980px; width:100%}
+    .card{
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      padding:32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .brand{display:flex; align-items:center; gap:12px; color:var(--muted); font-weight:600; letter-spacing:.4px}
+    .dot{width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 6px var(--ring)}
+    h1{margin:12px 0 6px; font-size:clamp(28px,4vw,44px); line-height:1.1}
+    p.sub{margin:0 0 18px; color:var(--muted); font-size:clamp(14px,2vw,18px)}
+    .timer{display:flex; gap:12px; flex-wrap:wrap; margin:22px 0 8px}
+    .tile{
+      min-width:90px; text-align:center; border-radius:16px; padding:14px 12px;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08)
+    }
+    .num{font-size:32px; font-weight:800}
+    .lbl{font-size:12px; color:var(--muted); letter-spacing:.3px; text-transform:uppercase}
+    form{
+      margin-top:18px; display:flex; gap:10px; flex-wrap:wrap
+    }
+    input[type=email]{
+      flex:1 1 260px; padding:14px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06); color:var(--text); outline:none;
+    }
+    input::placeholder{color:#9aa7b5}
+    button{
+      padding:14px 18px; border:none; border-radius:12px; font-weight:700; cursor:pointer;
+      background:linear-gradient(180deg,#38bdf8,#0ea5e9); color:#00131c;
+      box-shadow:0 10px 30px rgba(14,165,233,.35);
+    }
+    .footer{
+      margin-top:22px; display:flex; gap:12px; align-items:center; color:var(--muted); font-size:14px; flex-wrap:wrap
+    }
+    .sep{opacity:.3}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,1px,1px); border:0;}
+  </style>
+</head>
+<body data-target-date="{{ target_date|default('', true) }}">
+  <div class="wrap">
+    <div class="card" role="region" aria-labelledby="cs-title">
+      <div class="brand">
+        <span class="dot" aria-hidden="true"></span>
+        <span>{{ brand_name or "Your Brand" }}</span>
+      </div>
+
+      <h1 id="cs-title">{{ headline or "We’re launching soon" }}</h1>
+      <p class="sub">{{ subheadline or "We’re putting on the final touches. Leave your email and we’ll ping you the moment we go live." }}</p>
+
+      <div class="timer" aria-live="polite">
+        <div class="tile"><div class="num" id="d">--</div><div class="lbl">Days</div></div>
+        <div class="tile"><div class="num" id="h">--</div><div class="lbl">Hours</div></div>
+        <div class="tile"><div class="num" id="m">--</div><div class="lbl">Minutes</div></div>
+        <div class="tile"><div class="num" id="s">--</div><div class="lbl">Seconds</div></div>
+      </div>
+
+      {% if show_form is not defined or show_form %}
+      <form method="post" action="{{ subscribe_action or '#' }}" novalidate>
+        <label for="email" class="sr-only">Email address</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      {% endif %}
+
+      <div class="footer">
+        {% if contact_email %}
+          <span>Questions? <a href="mailto:{{ contact_email }}">{{ contact_email }}</a></span>
+          <span class="sep">•</span>
+        {% endif %}
+        <span>© {{ year or  (now().year if now is defined else '') }} {{ brand_name or "Your Brand" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const root = document.body;
+      const target = root.getAttribute('data-target-date'); // e.g. "2025-12-31T23:59:59Z"
+      const dEl = document.getElementById('d'), hEl = document.getElementById('h'),
+            mEl = document.getElementById('m'), sEl = document.getElementById('s');
+      if(!target){ dEl.textContent=hEl.textContent=mEl.textContent=sEl.textContent='--'; return; }
+
+      const end = new Date(target);
+      function pad(n){ return String(n).padStart(2,'0'); }
+      function tick(){
+        const now = new Date();
+        let diff = Math.max(0, end - now);
+        const d = Math.floor(diff / (1000*60*60*24)); diff -= d*24*60*60*1000;
+        const h = Math.floor(diff / (1000*60*60));    diff -= h*60*60*1000;
+        const m = Math.floor(diff / (1000*60));       diff -= m*60*1000;
+        const s = Math.floor(diff / 1000);
+        dEl.textContent = d;
+        hEl.textContent = pad(h);
+        mEl.textContent = pad(m);
+        sEl.textContent = pad(s);
+      }
+      tick(); setInterval(tick, 1000);
+    })();
+  </script>
+</body>
+</html>
